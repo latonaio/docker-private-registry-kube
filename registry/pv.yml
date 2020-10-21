@@ -1,0 +1,27 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: docker-rg-pv-volume
+  labels:
+    type: local
+spec:
+  storageClassName: docker-registry
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/docker-registry"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: docker-rg-pv-volume
+spec:
+  storageClassName: docker-registry
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+

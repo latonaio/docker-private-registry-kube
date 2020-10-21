@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kube-registry
+#    kubernetes.io/cluster-service: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kube-registry
+  template:
+    metadata:
+      labels:
+        app: kube-registry
+#        kubernetes.io/cluster-service: "true"
+    spec:
+      containers:
+      - name: registry
+        image: registry:2
+        env:
+        - name: REGISTRY_HTTP_ADDR
+          value: :5000
+        - name: REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY
+          value: /var/lib/registry
+        - name: REGISTRY_STORAGE_DELETE_ENABLED
+          value: "true"
+        - name: REGISTRY_AUTH_HTPASSWD_REALM
+          value: basic_realm
+        - name: REGISTRY_AUTH_HTPASSWD_PATH
+          value: /auth/htpasswd
+        - name: REGISTRY_HTTP_TLS_CERTIFICATE
+          value: /var/lib/aion/certs/domain.crt
+        - name: REGISTRY_HTTP_TLS_KEY
+          value: /var/lib/aion/certs/domain.key
+        volumeMounts:
+        - name: image-store
+          mountPath: /var/lib/registry
+        - name: auth-dir
+          mountPath: /auth
+        - name: certs-dir
+          mountPath: /var/lib/aion/certs
+        ports:
+        - containerPort: 5000
+          name: registry
+          protocol: TCP
+      volumes:
+      - name: image-store
+        hostPath:
+          path: /var/lib/docker/kube
+      - name: auth-dir
+        secret:
+          secretName: registry-auth-secret
+      - name: certs-dir
+        hostPath:
+          path: /var/lib/aion/certs

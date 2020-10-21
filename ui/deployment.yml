@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: docker-registry-ui
+  labels:
+    app: docker-registry-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: docker-registry-ui
+      release: docker-registry-ui
+  template:
+    metadata:
+      labels:
+        app: docker-registry-ui
+        release: docker-registry-ui
+    spec:
+      containers:
+        - name: docker-registry-ui
+          image: "docker.io/joxit/docker-registry-ui:arm64v8-static"
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: REGISTRY_TITLE
+              value: "Docker registry UI"
+            - name: DELETE_IMAGES
+              value: "false"
+            - name: REGISTRY_URL
+              value: "https://kube-registry.default:5000"
+            - name: PULL_URL
+              value: "docker-registry-ui.default:80"
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {}
