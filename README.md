@@ -1,9 +1,16 @@
-# README #
+# docker-private-registry-kube #
+docker-private-registry-kube は、エッジ端末内に Docker Private Registry を 構築・稼働させるためのマイクロサービスです。  
+docker-private-registry-kube は、AIONプラットフォームにおいて、主に コンテナデプロイメントシステム にて エッジ端末内のコンテナイメージを維持管理したり、デプロイ元端末からデプロイ先端末へコンテナイメージをプルしたりするために利用されます。  
 
+### 動作環境 ###
+* OS: LinuxOS  
+* CPU: ARM/AMD/Intel  
+* Kubernetes  
+* AION  
 
-### 前提 ###
+### 前提条件 ###
 * マウントされた該当ストレージ領域における任意のディレクトリに、Kubernetesがインストールされていること
-* Kubernetesが起動していること
+* Kubernetesが起動していること  
 
 ### セットアップ ###
 
